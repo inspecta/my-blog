@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Post;
 use App\Policies\PostPolicy;
@@ -25,6 +25,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Gate for admins to access certain services only
+        Gate::define('adminsViewOnly', function ($user) {
+            return $user->isAdmin === 1;
+        });
     }
 }
