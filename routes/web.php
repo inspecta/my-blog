@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,3 +79,12 @@ Route::get(
 Route::get('/admins-only', function () {
   return view('admins-dashboard');
 })->middleware('can:adminsViewOnly');
+
+/*
+  Follow User Routes
+*/
+// Add a follow
+Route::post('/create-follow/{user:username}', [FollowController::class, "createFollow"])->middleware(('MustBeLoggedIn'));
+
+//  Remove a follow
+Route::post('/remove-follow/{user:username}', [FollowController::class, "removeFollow"])->middleware('MustBeLoggedIn');
