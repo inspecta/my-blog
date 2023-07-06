@@ -3,14 +3,28 @@
         <h2>
             <img class="avatar-small" src="{{ auth()->user()->avatar }}" />
             {{ $username }}
-            <form class="ml-2 d-inline" action="#" method="POST">
-                <button class="btn btn-primary btn-sm">Follow <i class="fas fa-user-plus"></i></button>
-                {{-- <button class="btn btn-danger btn-sm">Stop Following <i class="fas fa-user-times"></i></button> --}}
+            @auth
+                {{-- If the user is currently not following this user --}}
+                @if (!$currentlyFollowing and auth()->user()->username != $username)
+                    <form class="ml-2 d-inline" action="/create-follow/{{ $username }}" method="POST">
+                        @csrf
+                        <button class="btn btn-primary btn-sm">Follow <i class="fas fa-user-plus"></i></button>
+                    </form>
+                @endif
+
+                {{-- If the user is already following the profile --}}
+                @if ($currentlyFollowing)
+                    <form class="ml-2 d-inline" action="/remove-follow/{{ $username }}" method="POST">
+                        @csrf
+                        <button class="btn btn-danger btn-sm">Stop Following <i class="fas fa-user-times"></i></button>
+                    </form>
+                @endif
+
                 {{-- User can only manage the avatar if he is logged in into his account only --}}
                 @if (auth()->user()->username == $username)
                     <a href="/manage-avatar" class="btn btn-sm btn-secondary">Manage Avatar</a>
                 @endif
-            </form>
+            @endauth
         </h2>
 
         <div class="profile-nav nav nav-tabs pt-2 mb-4">
